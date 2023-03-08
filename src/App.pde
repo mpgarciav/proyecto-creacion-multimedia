@@ -5,8 +5,8 @@ Capture video;
 int time;
 
 float gap = 16;
-int level = 500;
-float normX = 2.134375;    // Normalization of x axis pixels between screen width and video width
+int level = 250;
+float normX = 1.5;    // Normalization of x axis pixels between screen width and video width
 float normY = 1.6;   // Normalization of y axis pixels between screen height and video height
 int wait = 5000;
 
@@ -44,8 +44,9 @@ public class Pixel {
         noStroke();
         
         float grow = map(this.avg, 255, 0, gap, gap * 4);
+        float posZ = grow / 2;
         
-        translate(this.posX, this.posY, 0);
+        translate(this.posX, this.posY, posZ);
         sphereDetail(10);
         sphere(grow);
         
@@ -124,8 +125,8 @@ public class Pixel {
 
 
 void setup(){
-  // size(600, 600, P3D);
-  fullScreen(P3D);
+  size(600, 600, P3D);
+  //fullScreen(P3D);
  
   control = new CameraControl(this);
   video = new Capture(this);
