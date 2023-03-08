@@ -1,6 +1,6 @@
 public class CameraControl {
-  final float MOVE_SPEED = 8;
-  final float ROTATION_SPEED = 0.02;
+  final float MOVE_SPEED = 16;
+  final float ROTATION_SPEED = 0.04;
   
   PApplet parent;
 
@@ -67,51 +67,5 @@ public class CameraControl {
     float cy = -C.m12 + ey;
     float cz = -C.m22 + ez;
     parent.camera( ex, ey, ez, cx, cy, cz, 0, 1, 0 );
-  }
-}
-
-CameraControl control;
-
-float gap;
-float level;
-
-void setup(){
-  size(800, 800, P3D);
-  control = new CameraControl(this);
-  
-  gap = 20;
-  level = 0;
-  // noStroke();
-}
-
-
-void mousePressed(){
-  
-}
-
-void draw() {
-  background(255);
-  level += 0.05;
-  
-  for(int i = 0; i < width * 2; i += gap){
-    for(int j = 0; j < height * 2; j += gap){
-     
-      pushMatrix();
-      
-      float posX = sin(map(i, 0, width * 2, 0, 4 * PI) + level) * 28;
-      float posY = sin(map(j, 0, width * 2, 0, 4 * PI) + level) * 28;
-      
-      translate(i, j, 0);
-      
-      fill(255);
-      
-      box(gap, gap, posY * posX);
-      
-      popMatrix();
-    }  
-  }
-  
-  if(level >= 800 * 0.05){
-    level = 0;
   }
 }
