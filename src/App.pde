@@ -3,15 +3,14 @@ import processing.video.*;
 CameraControl control;
 Capture video;
 int time;
-JSONObject json;
 
 float gap = 16;
-int level = 255;
-float normX = 0.9375;    // Normalization of x axis pixels between screen width and video width
-float normY = 1.25;   // Normalization of y axis pixels between screen height and video height
+int level = 500;
+float normX = 2.134375;    // Normalization of x axis pixels between screen width and video width
+float normY = 1.6;   // Normalization of y axis pixels between screen height and video height
 int wait = 5000;
 
-int SHAPE_MODE = int(random(5));    // 1: Boxes, 2: Spheres, 3: Hinges
+int SHAPE_MODE = int(random(6));    // 1: Boxes, 2: Spheres, 3: Hinges
 int COLOR_MODE = int(random(4));    // 1: Normal, 2: Sensor, 3: B&W, 4: Palettes
 Palette PALETTE = getRandomPalette();
 
@@ -37,7 +36,7 @@ public class Pixel {
         float posZ = grow / 2;
 
         translate(this.posX, this.posY, posZ);
-        box(gap * normX, gap * normY, grow);
+        box(gap * max(normX, normY), gap * max(normX, normY), grow);
         
         break;
       }
@@ -59,7 +58,7 @@ public class Pixel {
         
         translate(this.posX, this.posY, 0);
         rotateX(rotation);
-        box(gap * normX, gap * normY, 2);
+        box(gap * max(normX, normY), gap * max(normX, normY), 2);
         
         break;
       }
@@ -68,7 +67,7 @@ public class Pixel {
         
         translate(this.posX, this.posY, 0);
         rotateY(rotation);
-        box(gap * normX, gap * normY, 2);
+        box(gap * max(normX, normY), gap * max(normX, normY), 2);
         
         break;
       }
@@ -77,7 +76,16 @@ public class Pixel {
         
         translate(this.posX, this.posY, 0);
         rotateZ(rotation);
-        box(gap * normX, gap * normY, 2);
+        box(gap * max(normX, normY), gap * max(normX, normY), 2);
+        
+        break;
+      }
+      case 5: { // ZHINGES
+        float grow = map(this.avg, 255, 0, 0, level * 2);
+        float posZ = grow / 2;
+        
+        translate(this.posX, this.posY, posZ);
+        box(gap * max(normX, normY), gap * max(normX, normY), 2);
         
         break;
       }
@@ -116,8 +124,8 @@ public class Pixel {
 
 
 void setup(){
-  size(600, 600, P3D);
-  // fullScreen(P3D);
+  // size(600, 600, P3D);
+  fullScreen(P3D);
  
   control = new CameraControl(this);
   video = new Capture(this);
@@ -138,7 +146,7 @@ void keyPressed() {
 
 void draw() {
   if(millis() - time >= wait){
-    SHAPE_MODE = int(random(5));
+    SHAPE_MODE = int(random(6));
     COLOR_MODE = int(random(4));
     PALETTE = getRandomPalette();
     time = millis();
@@ -157,8 +165,8 @@ void draw() {
   for(int i = 0; i < video.width; i += gap){
     for(int j = 0; j < video.height; j += gap){
       int pixel = i + j * video.width;
-      float posX = i * normX;
-      float posY = j * normY;
+      float posX = i * max(normX, normY);
+      float posY = j * max(normX, normY);
       color c = video.pixels[pixel];
 
       Pixel p = new Pixel(posX, posY, c);
